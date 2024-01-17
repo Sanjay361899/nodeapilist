@@ -26,5 +26,6 @@ user_route.get('/test',auth.auth,(req,res)=>{
     res.status(200).send({message:"api fetched"})
 });
 user_route.post('/update',auth.auth,userController.update_password)
-user_route.post('/forget',userController.forget_password)
+user_route.post('/forgetMail',userController.forget_password)
+user_route.post('/reset-password',userController.reset_Password)
 module.exports=user_route;

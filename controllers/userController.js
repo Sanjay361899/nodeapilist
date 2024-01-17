@@ -2,6 +2,37 @@ const User= require('../models/userModels.js');
 const bcryptjs=require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config=require('../config/config.js')
+const nodemailer=require('nodemailer')
+const sendResetPasswordMail= async(name,email,token,id)=>{
+    try {
+       const transporter= nodemailer.createTransport({
+            host:'smtp.gmail.com',
+            port:587,
+            secure:false,
+            requireTLS:true,
+            auth:{
+                user:config.config.emailUser,
+                pass:config.config.emailPassword
+
+            }
+        })
+        const mailOptions={
+            from:config.config.emailUser,
+            to:email,
+            subject:'for reset password',
+            html:'<p> hii '+name+', Please copy the link for reset and <a href="http://127.0.0.1:3000/reset-password?token='+id+'">reset your password </a> '
+        }
+        transporter.sendMail(mailOptions,(error,info)=>{
+            if(error){
+                console.log(error);
+            }else{
+                console.log("mail has been sent");
+            }
+        })
+    } catch (error) {
+        res.status(400).send({success:false,msg:error.message})
+    }
+}
 const securepass=async(password)=>{
     try{
      const passwordHash= await bcryptjs.hash(password,10);
@@ -97,7 +128,9 @@ const forget_password=async (req,res)=>{
 try {
     const data=await User.findOne({email:req.body.email});
     if(data){
-     res.status(200).send({success:true,message:"forgte mail is send"})
+        const token=await secretKey(data._id);
+        sendResetPasswordMail(data.name,data.email,token,data._id)
+     res.status(200).send({success:true,message:"forget mail is send"})
     }else{
         res.status(200).send({message:"mail enter is not valid."})
     }
@@ -105,9 +138,25 @@ try {
     res.status(400).send({message:"forget password request error"})
 }
 }
+const reset_Password= async(req,res)=>{
+    try {
+        const iddata=req.query.token;
+        const data = await User.findOne({_id:iddata});
+       if(data){
+        const hashpass1=await securepass(req.body.password);
+        const userupdate=await User.findByIdAndUpdate({_id:id},{$set:{password:hashpass1}},{new:true})
+        res.status(200).send({msg:"password changed through mail",success:true})
+    }else{
+     res.status(200).send({msg:"id is not correct in token",sucess:false})
+    }
+} catch (error) {
+        res.status(400).send({success:false,msg:error.message})
+    }
+}
 module.exports={
     register_user,
     login_user,
     update_password,
-    forget_password
+    forget_password,
+    reset_Password
 }
