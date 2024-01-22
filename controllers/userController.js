@@ -13,7 +13,6 @@ const sendResetPasswordMail= async(name,email,token,id)=>{
             auth:{
                 user:config.config.emailUser,
                 pass:config.config.emailPassword
-
             }
         })
         const mailOptions={

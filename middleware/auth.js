@@ -10,11 +10,12 @@ const auth=(req,res,next)=>{
  else{ 
       const descode=jwt.verify(token,config.config.secret_jwt);
       req.users=descode;
+      next();
     }
 }catch(error){
         res.status(400).send({message:"error in token fetching"})
     }
-    return next()
+   
 }
 module.exports={
     auth
