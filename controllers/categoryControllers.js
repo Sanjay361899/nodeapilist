@@ -17,12 +17,15 @@ try {
             category:req.body.category
         });
         await cat.save()
+        res.status(200).send({success:true,message:"category created.",data:cat})
+
      }
     }else{
         const categ=new Category({
             category:req.body.category
         });
         await categ.save()
+        res.status(200).send({success:true,message:"category created.",data:categ})
     }
 } catch (error) {
     res.status(400).send(error.message)

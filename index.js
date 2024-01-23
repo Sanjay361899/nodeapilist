@@ -8,9 +8,11 @@ app.use('/',user_routes)
 const store_routes=require('./routes/storeRoutes.js')
 app.use('/',store_routes);
 
-const category_router=require('./routes/categoryRoutes.js')
-app.use('/',category_router);
+const category_routes=require('./routes/categoryRoutes.js')
+app.use('/',category_routes);
 
+const sub_routes=require('./routes/subCategoryRoutes.js')
+app.use('/',sub_routes);
 
 app.listen(3000,()=>{
     console.log("server is connected on")
