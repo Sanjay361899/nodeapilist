@@ -14,6 +14,9 @@ app.use('/',category_routes);
 const sub_routes=require('./routes/subCategoryRoutes.js')
 app.use('/',sub_routes);
 
+const product_routes=require('./routes/productRoutes.js')
+app.use('',product_routes)
+
 app.listen(3000,()=>{
     console.log("server is connected on")
 })
