@@ -23,4 +23,5 @@ const storage=multer.diskStorage({
 })
 const upload=multer({storage:storage});
 product_router.post('/addproduct',upload.array('images'),auth.auth,productController.addProduct);
+product_router.get('/getproducts',auth.auth,productController.getAllProducts)
 module.exports=product_router;

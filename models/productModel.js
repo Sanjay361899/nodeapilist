@@ -30,7 +30,11 @@ const productSchema=mongoose.Schema({
     },
     images:{
         type:Array,
-        required:true
+        required:true,
+        // validate:[ima,"file size should be less then 5"]
     }
 })
+function ima(val){
+   return val.length<=2;
+}
 module.exports=mongoose.model("Product",productSchema);

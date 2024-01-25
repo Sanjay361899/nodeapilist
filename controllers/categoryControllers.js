@@ -31,7 +31,11 @@ try {
     res.status(400).send(error.message)
 }
 }
+const getAllCategory=async ()=>{
+    return await Category.find();
+}
 
 module.exports={
-    addCategory
+    addCategory,
+    getAllCategory
 }

@@ -35,6 +35,10 @@ const createStore=async(req,res)=>{
         res.status(400).send(error.message);
     }
 }
+const storeData= async (id)=>{
+    return await Store.findById({_id:id})
+}
 module.exports={
-    createStore
+    createStore,
+    storeData
 }
