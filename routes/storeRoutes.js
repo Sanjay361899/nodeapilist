@@ -27,5 +27,6 @@ const upload= multer({storage:storage});
 const storeController= require('../controllers/storeController.js')
 const auth=require('../middleware/auth.js')
 store_routes.post('/createStore',auth.auth,upload.single('logo'),storeController.createStore)
+store_routes.post('/find-nearest-store',auth.auth,storeController.findNearestStore)
 
 module.exports=store_routes;

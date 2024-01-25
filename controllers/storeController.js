@@ -38,7 +38,15 @@ const createStore=async(req,res)=>{
 const storeData= async (id)=>{
     return await Store.findById({_id:id})
 }
+const findNearestStore=async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        res.status(400).send({msg:error.message})
+    }
+}
 module.exports={
     createStore,
-    storeData
+    storeData,
+    findNearestStore
 }

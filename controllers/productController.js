@@ -57,8 +57,23 @@ const getAllProducts= async (req,res)=>{
     res.status(400).send({success:false,message:error.message})
    }
 }
+const getSearchOne=async(req,res)=>{
+    try {
+        const searchs= req.body.search;
+        const data=await Product.find({"name":{$regex:'.*'+searchs+'.*',$options:'i'}})
+        if(data.length>0){
+            res.status(200).send({success:true,data:data,msg:"data is searched"})
+        }else{
+            res.status(200).send({success:false,msg:"no data is here"})
 
+        }
+        
+    } catch (error) {
+        res.status(400).send({success:false,msg:error.message})
+    }
+}
 module.exports={
     addProduct,
-    getAllProducts
+    getAllProducts,
+    getSearchOne
 }
