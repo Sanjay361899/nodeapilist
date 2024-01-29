@@ -3,7 +3,6 @@ const User=require("../models/userModels.js")
 
 const createStore=async(req,res)=>{
     try {
- 
         const userData= await User.findOne({_id:req.body.vendor_id});
         if(userData){
          const storeData=await Store.findOne({vendor_id:req.body.vendor_id});
@@ -52,7 +51,7 @@ const findNearestStore=async(req,res)=>{
               }
             }
          ]);
-         res.status(200).send({success:true,msg:"nerest api is hitted", data:nearest});
+         res.status(200).send({success:true,msg:"nearest api is hitted", data:nearest});
     } catch (error) {
         res.status(400).send({success:false,msg:error.message})
     }
