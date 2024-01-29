@@ -67,7 +67,6 @@ const getSearchOne=async(req,res)=>{
             res.status(200).send({success:false,msg:"no data is here"})
 
         }
-        
     } catch (error) {
         res.status(400).send({success:false,msg:error.message})
     }

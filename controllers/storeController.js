@@ -8,7 +8,7 @@ const createStore=async(req,res)=>{
         if(userData){
          const storeData=await Store.findOne({vendor_id:req.body.vendor_id});
          if(storeData){
-            req.status(200).send({success:false,message:"vendor store is already created"});
+            res.status(200).send({success:false,message:"vendor store is already created"});
          }else{
            if(!req.body.longitude || !req.body.latitude){
               res.status(200).send({success:false,message:"longitude and latitude is not there."});
@@ -32,7 +32,7 @@ const createStore=async(req,res)=>{
             res.status(200).send({success:false,message:"vendor is not registered."})
         }
     } catch (error) {
-        res.status(400).send(error.message);
+        res.status(400).send({success:false,msg:error.message});
     }
 }
 const storeData= async (id)=>{
@@ -40,11 +40,24 @@ const storeData= async (id)=>{
 }
 const findNearestStore=async(req,res)=>{
     try {
-        
+        const nearest=await Store.aggregate([
+            {
+              $geoNear: {
+                 near: { type: "Point", coordinates: [ parseFloat(req.body.longitude),parseFloat(req.body.latitude)] },
+                 key:"location",
+                 minDistance: parseFloat(2000)*1609,
+                 distanceLocation:'dist.location',
+                 distanceField: "dist.calculated",
+                 spherical: true,
+              }
+            }
+         ]);
+         res.status(200).send({success:true,msg:"nerest api is hitted", data:nearest});
     } catch (error) {
-        res.status(400).send({msg:error.message})
+        res.status(400).send({success:false,msg:error.message})
     }
 }
+
 module.exports={
     createStore,
     storeData,
