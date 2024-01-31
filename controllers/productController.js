@@ -71,8 +71,37 @@ const getSearchOne=async(req,res)=>{
         res.status(400).send({success:false,msg:error.message})
     }
 }
+const pagination=async(req,res)=>{
+try {
+    let skip;
+    let sorts=req?.body?.sort;
+    // here sorts we can't pass direct to sort()
+    var customsort;
+    
+    if(req?.body?.page<=1){
+       skip=0;
+    }else{
+        skip=(page-1)*2;
+    }
+    if(sorts=='name'){
+         customsort={
+           name:1
+        }
+    }else{
+        customsort={
+            _id:1
+         }
+    }
+    console.log(customsort);
+    const data=await Product.find().sort(customsort).skip(skip).limit(2)
+    res.status(200).send({success:true,message:"all data is here with pagination",data:data})
+} catch (error) {
+    res.status(400).send({msg:error.message,success:false})
+}
+}
 module.exports={
     addProduct,
     getAllProducts,
-    getSearchOne
+    getSearchOne,
+    pagination
 }

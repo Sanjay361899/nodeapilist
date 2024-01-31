@@ -20,9 +20,6 @@ const addAddress=async(req,res)=>{
         await data.save();
         res.status(200).send({success:true,msg:"Address is saved.",data:data})
     }
-        
-     
-
     } catch (error) {
         res.status(400).send({success:false,msg:error.message})
     }

@@ -25,4 +25,5 @@ const upload=multer({storage:storage});
 product_router.post('/addproduct',upload.array('images'),auth.auth,productController.addProduct);
 product_router.get('/getproducts',auth.auth,productController.getAllProducts)
 product_router.post('/searchproducts',auth.auth,productController.getSearchOne)
+product_router.post('/pagination',auth.auth,productController.pagination)
 module.exports=product_router;

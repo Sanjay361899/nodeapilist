@@ -18,7 +18,6 @@ try {
         });
         await cat.save()
         res.status(200).send({success:true,message:"category created.",data:cat})
-
      }
     }else{
         const categ=new Category({
