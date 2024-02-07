@@ -28,4 +28,5 @@ user_route.get('/test',auth.auth,(req,res)=>{
 user_route.post('/update',auth.auth,userController.update_password)
 user_route.post('/forgetMail',userController.forget_password)
 user_route.post('/reset-password',userController.reset_Password)
+user_route.post('/send-otp',userController.mailOtp);
 module.exports=user_route;

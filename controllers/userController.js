@@ -1,8 +1,12 @@
 const User= require('../models/userModels.js');
+const Otp=require('../models/otpModel.js')
 const bcryptjs=require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config=require('../config/config.js')
-const nodemailer=require('nodemailer')
+const nodemailer=require('nodemailer');
+const otpModel = require('../models/otpModel.js');
+const sendMail = require('../helper/mailer.js');
+const oneMinute = require('../helper/oneMinuteExpiry.js');
 const sendResetPasswordMail= async(name,email,token,id)=>{
     try {
        const transporter= nodemailer.createTransport({
@@ -152,10 +156,66 @@ const reset_Password= async(req,res)=>{
         res.status(400).send({success:false,msg:error.message})
     }
 }
+const generateRandom4Digit= async()=>{
+   return Math.floor(1000+Math.random()*9000);
+}
+const mailOtp=async (req,res)=>{
+    try {
+        const userData=await User.findOne({email:req.body.email})
+
+        if(userData){
+             if(userData.is_verified!="0"){
+            res.status(200).send({success:false,msg:"Already verified."})
+             }else{
+                const gen=await generateRandom4Digit();
+
+        const alreadyotpSent=await otpModel.findOne({
+            user_id:userData._id
+        })
+        const checkOneMinute=await oneMinute(alreadyotpSent.timestamp)
+        if(checkOneMinute)
+        {const cdate= new Date();
+        await otpModel.findOneAndUpdate(
+            {user_id:userData._id  },
+            {otp:gen,timestamp:new Date(cdate.getTime())},
+            {upsert:true, new:true,setDefaultsOnInsert:true}
+            )
+                const msg='<p> hii <b> '+userData.name+'</b>,</br> <h4>'+gen+'</h4></p>'
+                const sub="User Verification otp."
+                await sendMail(userData.email,sub,msg);
+                res.status(200).send({success:true,msg:"otp sent to mail."})
+             }else{
+                res.status(200).send({success:false,msg:"otp resent to mail after 1 minute."})
+
+             }
+            }
+    
+        }else{
+            res.status(200).send({success:false,msg:"email doesn't exist."})
+        }
+    } catch (error) {
+        res.status(400).send({success:false,message:error.message})
+    }
+}
+const verifyOtp=async(req,res)=>{
+    try {
+        const otpData=await otpModel.findOne({otp:req.body.otp})
+        const threeMinuteCheck=await oneMinute(otpData.timestamp,timecheck=3);
+        if(threeMinuteCheck){
+
+        }else{
+            res.status(200).send({message:""})
+        }
+    } catch (error) {
+      res.status(400).send({success:false,message:error.message})
+    }
+}
 module.exports={
     register_user,
     login_user,
     update_password,
     forget_password,
-    reset_Password
+    reset_Password,
+    mailOtp,
+    verifyOtp
 }

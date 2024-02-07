@@ -24,6 +24,11 @@ const user=mongoose.Schema({
     type:{
         type:String,
         required:true
+    },
+    is_verified:{
+       type:String,
+       required:true,
+       default:0
     }
 })
 module.exports = mongoose.model("User",user);

@@ -23,7 +23,6 @@ res.status(200).send({success:true,message:"product is added",data:addProduct})
 } catch (error) {
     res.status(400).send(error.message)
 }
-
 }
 const getAllProducts= async (req,res)=>{
    try {
